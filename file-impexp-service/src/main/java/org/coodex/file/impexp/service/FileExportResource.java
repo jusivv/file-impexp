@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.function.Supplier;
 
 @Path("file/export")
 public class FileExportResource {
@@ -66,7 +67,13 @@ public class FileExportResource {
 
     private Response download(String bizName, HttpServletRequest request)
             throws UnsupportedEncodingException {
-        ParameterReader parameterReader = ParameterReaderSelector.select(request.getContentType()).orElseThrow();
+        ParameterReader parameterReader = ParameterReaderSelector.select(request.getContentType())
+                .orElseThrow(new Supplier<RuntimeException>() {
+            @Override
+            public RuntimeException get() {
+                return new RuntimeException("no parameter reader");
+            }
+        });
         final ExportStream exportStream = SpringBeanTool.getBean(bizName, ExportStream.class);
         Object paramInstance = exportStream.newParameterObject();
         final Object param = paramInstance != null ? parameterReader.read(exportStream.newParameterObject(), request) :

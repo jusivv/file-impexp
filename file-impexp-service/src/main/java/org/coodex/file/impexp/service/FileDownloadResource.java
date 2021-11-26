@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.function.Supplier;
 
 @Path("file/download")
 public class FileDownloadResource {
@@ -45,7 +46,13 @@ public class FileDownloadResource {
 
     private Response handle(String bizName, boolean supportRange, HttpServletRequest request)
             throws UnsupportedEncodingException {
-        ParameterReader parameterReader = ParameterReaderSelector.select(request.getContentType()).orElseThrow();
+        ParameterReader parameterReader = ParameterReaderSelector.select(request.getContentType())
+                .orElseThrow(new Supplier<RuntimeException>() {
+                    @Override
+                    public RuntimeException get() {
+                        return new RuntimeException("no parameter reader");
+                    }
+                });
         final DownloadHandler downloadHandler = SpringBeanTool.getBean(bizName, DownloadHandler.class);
         Object paramInstance = downloadHandler.newParameterObject();
         final Object param = paramInstance != null ? parameterReader.read(downloadHandler.newParameterObject(), request)

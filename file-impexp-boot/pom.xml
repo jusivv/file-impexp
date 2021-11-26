@@ -7,7 +7,7 @@
   <parent>
     <artifactId>file-impexp</artifactId>
     <groupId>org.coodex</groupId>
-    <version>1.0.0</version>
+    <version>1.0.6</version>
   </parent>
   <artifactId>file-impexp-boot</artifactId>
   <packaging>war</packaging>
@@ -15,8 +15,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
